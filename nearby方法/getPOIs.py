@@ -42,13 +42,13 @@ print "lon:"+str(start_lon), "lat:"+str(start_lat)
 #############################################################
 my_key = '1163934014'
 my_secret = '3830048e5d6087700e68b787c2e83c3c'
-my_access_token = "2.00MIE22GQ6klQBdfe7497f230yWjCW"
+#my_access_token = "2.00MIE22GQ6klQBdfe7497f230yWjCW"
 #my_access_token = "2.00MIE22G0jbkXNbd85efbb1700IwBq"
 #my_access_token = "2.00sXyT2GGjwv4Ef26967559c0oVlFM"
 #my_access_token = "2.00PWey2Gi3oYcEbfac9bd2d9acLwcC"
 #my_access_token = "2.00cwey2G28HqADd499e1cddd0NVRm2"
 
-#my_access_token = "2.00sXyT2GQ6klQBeba1a5ce33EhSiDD"
+my_access_token = "2.00sXyT2GQ6klQBeba1a5ce33EhSiDD"
 
 my_client = myWeibo.set_weibo(my_key, my_secret, my_access_token)
 
@@ -141,6 +141,9 @@ def get_count(num):
                         return (50 - i)
         return 30
 
+poi_except_file=open("except.txt","a")
+
+
 #获取单个POI搜索的详细信息列表
 def get_POI_info(lon, lat):
     r = my_client.place.nearby.pois.get(lat=lat, long=lon, range=poi_range_origin, count=50, sort=1)
@@ -150,6 +153,13 @@ def get_POI_info(lon, lat):
     else:
         total_number = r.total_number#总个数
         write_POI(lon, lat, total_number)
+
+        #搜索个数大于1000的POI，记录需要单独处理的POI
+        if total_number>1000:
+                except_text = str(cur_poi_index) + "\n"
+                poi_except_file.write(except_text)
+                print u"POI"+str(cur_poi_index)+u"另外处理"
+                return
 
         #创建单个POI搜索详细结果文件
         info_file_name = "pois/" + str(cur_poi_index)+ ".txt"
@@ -263,5 +273,8 @@ poi_file.close()
 get_remain_pois()
 poi_file.flush()
 poi_file.close()
+
+poi_except_file.flush()
+poi_except_file.close()
 
 
