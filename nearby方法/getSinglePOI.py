@@ -27,19 +27,37 @@ total_lat_num = int(math.ceil((lat_max - lat_min )/lat_step_origin))#循环次�
 total_lon_num = int(math.ceil((lon_max - lon_min )/lon_step_origin))
 print total_lat_num * total_lon_num
 #print lat_step, lon_step
+#############################################################
+#读取excep.txt文件部分
+#############################################################
+poi_list = []
+f = open("except.txt", "r")
+for line in f:
+    poi_list.append(int(line))
+f.close() 
 
+def get_list_index(poi_index):
+        for i in range(len(poi_list)):
+                if poi_index == poi_list[i]:
+                        return i
+        print u"POI编号不存在于列表中，请重新输入"
+        return -1
+#############################################################
+#微博部分
+#############################################################
+
+#894, 28
 #############################################################
 #微博部分
 #############################################################
 my_key = '1163934014'
 my_secret = '3830048e5d6087700e68b787c2e83c3c'
-#my_access_token = "2.00MIE22GQ6klQBdfe7497f230yWjCW"
+my_access_token = "2.00MIE22GQ6klQBdfe7497f230yWjCW"
 #my_access_token = "2.00MIE22G0jbkXNbd85efbb1700IwBq"
 #my_access_token = "2.00sXyT2GGjwv4Ef26967559c0oVlFM"
 #my_access_token = "2.00PWey2Gi3oYcEbfac9bd2d9acLwcC"
 #my_access_token = "2.00cwey2G28HqADd499e1cddd0NVRm2"
-
-my_access_token = "2.00sXyT2GQ6klQBeba1a5ce33EhSiDD"
+#my_access_token = "2.00sXyT2GQ6klQBeba1a5ce33EhSiDD"
 
 my_client = myWeibo.set_weibo(my_key, my_secret, my_access_token)
 
@@ -78,7 +96,7 @@ def get_count(num):
 
 
 #获取单个POI搜索的详细信息列表
-def get_POI_info(lon, lat):
+def get_POI_info(lon, lat, page):
     r = my_client.place.nearby.pois.get(lat=lat, long=lon, range=poi_range_origin, count=50, sort=1)
     if "pois" not in r:
         total_number = 0
@@ -100,11 +118,13 @@ def get_POI_info(lon, lat):
             page_number = total_number/page_count
 
 
+        print "POI:"+str(cur_poi_index), "lon:"+str(lon), "lat:"+str(lat), "total_number:"+str(total_number)
+
         #循环每一页
         poi_index = 1
-        start_page = raw_input(u"请输入起始页数：")
+        #start_page = raw_input(u"请输入起始页数：")
         #start_page = 1
-        for page_index in range(int(start_page), page_number+1):
+        for page_index in range(int(page), page_number+1):
             r = my_client.place.nearby.pois.get(lat=lat, long=lon, range=poi_range_origin, count=page_count, sort=1, page=page_index)
             if "pois" not in r:
                 print "POI:"+str(cur_poi_index)+u"完成！\n"
@@ -155,27 +175,59 @@ def get_POI_info(lon, lat):
         poi_info_file.flush()
         poi_info_file.close()
 
-
-
+#cur_poi_index = 0
+"""
 def loop_search_poi():
         flag = True#控制循环
         while flag:
+                global cur_poi_index
                 cur_poi_index = int(raw_input(u'请输入POI编号(输入0退出)：'))
                 if cur_poi_index == 0:
                         return
+                
                 while cur_poi_index>= total_lat_num * total_lon_num or cur_poi_index<0:
                         print u"超出范围，请输入0-"+str(total_lat_num * total_lon_num)+"之间的数字！"
                         cur_poi_index = int(raw_input(u'请输入POI编号：'))
 
                 start_lon = lon_min + cur_poi_index % total_lon_num * lon_step_origin
                 start_lat = lat_min + cur_poi_index / total_lat_num  * lat_step_origin
-                print "lon:"+str(start_lon), "lat:"+str(start_lat)
+                #print "lon:"+str(start_lon), "lat:"+str(start_lat)
 
-                get_POI_info(start_lon, start_lat)
+                start_page = raw_input(u"请输入起始页数：")
+                get_POI_info(start_lon, start_lat, start_page)
+"""
 
+def get_remain_pois():
+        global cur_poi_index
+        cur_poi_index = int(raw_input(u'请输入POI编号(输入0退出)：'))
+        if cur_poi_index == 0:
+                return
 
+        while cur_poi_index>= total_lat_num * total_lon_num or cur_poi_index<0:
+                print u"超出范围，请输入0-"+str(total_lat_num * total_lon_num)+"之间的数字！"
+                cur_poi_index = int(raw_input(u'请输入POI编号：'))
 
-loop_search_poi()
+        list_index = get_list_index(cur_poi_index)
+        while list_index == -1:
+                cur_poi_index = int(raw_input(u'请输入POI编号：'))
+                list_index = get_list_index(cur_poi_index)
+
+        start_lon = lon_min + cur_poi_index % total_lon_num * lon_step_origin
+        start_lat = lat_min + cur_poi_index / total_lat_num  * lat_step_origin
+
+        start_page = raw_input(u"请输入起始页数：")
+        get_POI_info(start_lon, start_lat, start_page)
+
+                #循环剩余的POI
+        for i in range(list_index+1, len(poi_list)):
+                cur_poi_index = poi_list[i]
+                cur_lon = lon_min + cur_poi_index % total_lon_num * lon_step_origin
+                cur_lat = lat_min + cur_poi_index / total_lat_num  * lat_step_origin
+                get_POI_info(cur_lon, cur_lat, 1)
+
+#loop_search_poi()
+
+get_remain_pois()
     
 """
 cur_poi_index = int(raw_input(u'请输入POI编号：'))
@@ -190,3 +242,4 @@ print "lon:"+str(start_lon), "lat:"+str(start_lat)
 get_POI_info(start_lon, start_lat)
 ##写一个循环
 """
+
