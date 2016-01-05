@@ -42,13 +42,14 @@ print "lon:"+str(start_lon), "lat:"+str(start_lat)
 #############################################################
 my_key = '1163934014'
 my_secret = '3830048e5d6087700e68b787c2e83c3c'
-#my_access_token = "2.00MIE22GQ6klQBdfe7497f230yWjCW"
+my_access_token = "2.00MIE22GQ6klQBdfe7497f230yWjCW"
 #my_access_token = "2.00MIE22G0jbkXNbd85efbb1700IwBq"
 #my_access_token = "2.00sXyT2GGjwv4Ef26967559c0oVlFM"
 #my_access_token = "2.00PWey2Gi3oYcEbfac9bd2d9acLwcC"
 #my_access_token = "2.00cwey2G28HqADd499e1cddd0NVRm2"
-
-my_access_token = "2.00sXyT2GQ6klQBeba1a5ce33EhSiDD"
+#my_access_token = "2.00sXyT2GQ6klQBeba1a5ce33EhSiDD"
+#my_access_token = "2.002nOx2GJGGgGEaa5e600f73DmepBE"
+#my_access_token = "2.00jh8z2GpBdiwD6f08cce3ac0CXq55"
 
 my_client = myWeibo.set_weibo(my_key, my_secret, my_access_token)
 
@@ -134,7 +135,7 @@ def write_POI(lon, lat, total_number):
 #根据点数计算每页最合适的显示个数，最后一页（API不能获取到）点数小于10
 def get_count(num):
         if num < 50:
-                return num
+                return 50
         for i in range(31):
                 if 0 < num % (50 - i) < 10:
                         print (50 - i)
@@ -271,6 +272,7 @@ poi_file.close()
 #get_POI_info(114.870230558,30.3948045086)
         
 get_remain_pois()
+
 poi_file.flush()
 poi_file.close()
 

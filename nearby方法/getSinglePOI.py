@@ -28,15 +28,6 @@ total_lon_num = int(math.ceil((lon_max - lon_min )/lon_step_origin))
 print total_lat_num * total_lon_num
 #print lat_step, lon_step
 
-cur_poi_index = int(raw_input(u'请输入起始POI编号：'))
-while cur_poi_index>= total_lat_num * total_lon_num or cur_poi_index<0:
-        print u"超出范围，请输入0-"+str(total_lat_num * total_lon_num)+"之间的数字！"
-        cur_poi_index = int(raw_input(u'请输入起始POI编号：'))
-
-start_lon = lon_min + cur_poi_index % total_lon_num * lon_step_origin
-start_lat = lat_min + cur_poi_index / total_lat_num  * lat_step_origin
-print "lon:"+str(start_lon), "lat:"+str(start_lat)
-
 #############################################################
 #微博部分
 #############################################################
@@ -95,7 +86,7 @@ def get_POI_info(lon, lat):
         
     else:
         #创建单个POI搜索详细结果文件
-        info_file_name = "pois/" + str(cur_poi_index)+ ".txt"
+        info_file_name = "pois/single/" + str(cur_poi_index)+ ".txt"
         poi_info_file=open(info_file_name,"a")
         
         total_number = r.total_number#总个数
@@ -165,8 +156,37 @@ def get_POI_info(lon, lat):
         poi_info_file.close()
 
 
-    
 
-        
+def loop_search_poi():
+        flag = True#控制循环
+        while flag:
+                cur_poi_index = int(raw_input(u'请输入POI编号(输入0退出)：'))
+                if cur_poi_index == 0:
+                        return
+                while cur_poi_index>= total_lat_num * total_lon_num or cur_poi_index<0:
+                        print u"超出范围，请输入0-"+str(total_lat_num * total_lon_num)+"之间的数字！"
+                        cur_poi_index = int(raw_input(u'请输入POI编号：'))
+
+                start_lon = lon_min + cur_poi_index % total_lon_num * lon_step_origin
+                start_lat = lat_min + cur_poi_index / total_lat_num  * lat_step_origin
+                print "lon:"+str(start_lon), "lat:"+str(start_lat)
+
+                get_POI_info(start_lon, start_lat)
+
+
+
+loop_search_poi()
+    
+"""
+cur_poi_index = int(raw_input(u'请输入POI编号：'))
+while cur_poi_index>= total_lat_num * total_lon_num or cur_poi_index<0:
+        print u"超出范围，请输入0-"+str(total_lat_num * total_lon_num)+"之间的数字！"
+        cur_poi_index = int(raw_input(u'请输入POI编号：'))
+
+start_lon = lon_min + cur_poi_index % total_lon_num * lon_step_origin
+start_lat = lat_min + cur_poi_index / total_lat_num  * lat_step_origin
+print "lon:"+str(start_lon), "lat:"+str(start_lat)
+
 get_POI_info(start_lon, start_lat)
 ##写一个循环
+"""
