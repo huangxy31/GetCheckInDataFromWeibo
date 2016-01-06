@@ -46,7 +46,7 @@ def get_list_index(poi_index):
 #微博部分
 #############################################################
 
-#940, 66
+#985, 170
 #############################################################
 #微博部分
 #############################################################
@@ -57,6 +57,9 @@ my_access_token = "2.00MIE22GQ6klQBdfe7497f230yWjCW"
 #my_access_token = "2.00sXyT2GGjwv4Ef26967559c0oVlFM"
 #my_access_token = "2.00PWey2Gi3oYcEbfac9bd2d9acLwcC"
 #my_access_token = "2.00cwey2G28HqADd499e1cddd0NVRm2"
+#my_access_token = "2.002nOx2GJGGgGEaa5e600f73DmepBE"
+#my_access_token = "2.00jh8z2GpBdiwD6f08cce3ac0CXq55"
+
 #my_access_token = "2.00sXyT2GQ6klQBeba1a5ce33EhSiDD"
 
 my_client = myWeibo.set_weibo(my_key, my_secret, my_access_token)
