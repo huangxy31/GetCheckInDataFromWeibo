@@ -112,6 +112,7 @@ def get_POI_info(lon, lat, page):
         
         total_number = r.total_number#总个数
         page_count = get_count(total_number)#一页的个数
+        print page_count
         #print u"总共"+str(total_number)+u"个POI"
         page_number = 1
         #计算页数
@@ -179,7 +180,7 @@ def get_POI_info(lon, lat, page):
         poi_info_file.close()
 
 #cur_poi_index = 0
-"""
+
 def loop_search_poi():
         flag = True#控制循环
         while flag:
@@ -198,7 +199,7 @@ def loop_search_poi():
 
                 start_page = raw_input(u"请输入起始页数：")
                 get_POI_info(start_lon, start_lat, start_page)
-"""
+
 
 def get_remain_pois():
         global cur_poi_index
@@ -228,10 +229,14 @@ def get_remain_pois():
                 cur_lat = lat_min + cur_poi_index / total_lat_num  * lat_step_origin
                 get_POI_info(cur_lon, cur_lat, 1)
 
-#loop_search_poi()
+loop_search_poi()
 
-get_remain_pois()
+#get_remain_pois()
     
+
+#############################################################
+#获取单个POI
+#############################################################
 """
 cur_poi_index = int(raw_input(u'请输入POI编号：'))
 while cur_poi_index>= total_lat_num * total_lon_num or cur_poi_index<0:
@@ -242,7 +247,7 @@ start_lon = lon_min + cur_poi_index % total_lon_num * lon_step_origin
 start_lat = lat_min + cur_poi_index / total_lat_num  * lat_step_origin
 print "lon:"+str(start_lon), "lat:"+str(start_lat)
 
-get_POI_info(start_lon, start_lat)
-##写一个循环
+start_page = raw_input(u"请输入起始页数：")
+get_POI_info(start_lon, start_lat, start_page)
 """
 
