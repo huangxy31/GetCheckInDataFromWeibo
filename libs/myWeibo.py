@@ -6,12 +6,6 @@ import webbrowser#python内置的包
 import urllib2
 
 def set_weibo(appKey, appSecret, accessToken):
-    """
-    APP_KEY = '1163934014'
-    APP_SECRET = '3830048e5d6087700e68b787c2e83c3c'
-    CALLBACK_URL = 'https://api.weibo.com/oauth2/default.html'
-    access_token = "2.00MIE22GQ6klQBdfe7497f230yWjCW" # 新浪返回的token，类似abc123xyz456
-    """
     APP_KEY = appKey
     APP_SECRET = appSecret
     CALLBACK_URL = 'https://api.weibo.com/oauth2/default.html'
@@ -31,16 +25,32 @@ def set_weibo(appKey, appSecret, accessToken):
     #print r
     return client
 
-"""
-my_key = '1163934014'
-my_secret = '3830048e5d6087700e68b787c2e83c3c'
-my_access_token = "2.00MIE22GQ6klQBdfe7497f230yWjCW"
+def get_client(app_info_index, acess_token_index):
+    #读取appKey和appSecret
+    app_info_list = []
+    f = open("../libs/appKey.txt", "r")
+    for line in f:
+        app_info_list.append(line[:-1].split(","))
+    f.close()
 
+    #读取accessToken
+    access_token_list = []
+    f = open("../libs/accessToken.txt", "r")
+    for line in f:
+        access_token_list.append(line[:-1])
+    f.close()
 
-my_keyword = "广埠屯"
-my_keyword = my_keyword.decode('gbk').encode('utf-8')
-my_client = set_weibo(my_key, my_secret, my_access_token)
+    #参数不正确的话返回-1
+    if app_info_index>=len(app_info_list) or acess_token_index>=len(access_token_list):
+        return -1
+    
+    my_key = app_info_list[app_info_index][0]
+    my_secret = app_info_list[app_info_index][1]
+    my_access_token = access_token_list[acess_token_index]
+    print my_key, my_secret, my_access_token
 
-r = my_client.place.pois.search.get(keyword=my_keyword, count=2, page=1)#调用新浪API
-print r
-"""
+    #开始调用微博
+    my_client = set_weibo(my_key, my_secret, my_access_token)
+    return my_client
+
+#get_client(0, 0)

@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import math
-import myWeibo
 import sys
+sys.path.append("..")
+import libs.myWeibo
 
 sys.setrecursionlimit(1000000)
 
@@ -51,7 +52,7 @@ my_access_token = "2.00MIE22GQ6klQBdfe7497f230yWjCW"
 #my_access_token = "2.002nOx2GJGGgGEaa5e600f73DmepBE"
 #my_access_token = "2.00jh8z2GpBdiwD6f08cce3ac0CXq55"
 
-my_client = myWeibo.set_weibo(my_key, my_secret, my_access_token)
+my_client = libs.myWeibo.set_weibo(my_key, my_secret, my_access_token)
 
 """
 my_keyword = "广埠屯"
