@@ -12,23 +12,23 @@ import math
 
 #获取POI列表
 poi_list = []
-f = open("txt/all_poi_list.txt", "r")
+f = open("txt/check_in_list.txt", "r")
 for line in f:
-    poi_list.append(line.split())
+    poi_list.append(line[:-1])
 f.close()
 
 
 def get_list_index_by_id(poiid):
     for i in range(len(poi_list)):
         poi = poi_list[i]
-        if poiid == poi[1]:
+        if poiid == poi:
             return i
     return -1
 #############################################################
 #微博部分
-#259
+#1238
 #############################################################
-acess_token_index = 2
+acess_token_index = 9
 app_info_index = 0
 
 #开始调用微博
@@ -82,7 +82,7 @@ def write_poi_info(poi_index, poi_id, start_page):
         return
     else:
         #创建文件
-        file_name = str(poi_id) + ".txt"
+        file_name = poi_id[:8] + "/" + poi_id + ".txt"
         check_in_file = open("check in/"+file_name, "a")
         global cur_check_in_index
         cur_check_in_index = (start_page - 1) * count + 1
@@ -123,10 +123,8 @@ start_index = int(raw_input(u"请输入循环开始位置(i):"))
 start_page = int(raw_input(u"请输入签到查询起始页码:"))
 
 for i in range(start_index, len(poi_list)):
-    poi = poi_list[i]
-    poi_index = poi[0]
-    poi_id = poi[1]
+    poi_id = poi_list[i]
     if i == start_index:
-        write_poi_info(poi_index, poi_id, start_page)
+        write_poi_info(i, poi_id, start_page)
     else:
-        write_poi_info(poi_index, poi_id, 1)
+        write_poi_info(i, poi_id, 1)

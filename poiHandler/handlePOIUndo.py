@@ -10,7 +10,7 @@ import libs.myWeibo
 
 #获取需要处理的POI列表
 poi_list = []
-f = open("txt/poi_undo2.txt", "r")
+f = open("txt/poi_undo3.txt", "r")
 for line in f:
     poi_list.append(line.split())
 f.close()
@@ -42,7 +42,7 @@ while my_client == -1:
 #调用微博api，获取某一poiid的POI信息
 #############################################################
 #在poi_update.txt中记录新的POI信息
-poi_update_file = open("txt/poi_update.txt", "a")
+poi_update_file = open("txt/poi_update2.txt", "a")
 
 def write_poi_info(poi_index, page, page_index, poi_id):
     #获取poi信息
