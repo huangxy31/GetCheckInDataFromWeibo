@@ -26,7 +26,7 @@ def get_list_index_by_id(poiid):
     return -1
 #############################################################
 #微博部分
-#4416
+#2273
 #############################################################
 acess_token_index = 1
 app_info_index = 0
@@ -70,15 +70,14 @@ def write_check_in_data(r, check_in_file):
             text = "\t".join(check_in_info) + "\n"
             check_in_file.write(text)
             cur_check_in_index += 1
-
-           
+            
 #从某页起，获取poi_id的签到信息
 def write_poi_info(poi_index, poi_id, start_page):
     #获取poi信息
     count = 50
     try:
         r = my_client.place.poi_timeline.get(poiid=poi_id, count=count, page=1)
-        #print poi_id, count, "?"
+        
         if "statuses" not in r:
             #没有签到数据就返回
             print u"POI:"+str(poi_index)+u", POIID:"+str(poi_id)+u"没有签到数据"
@@ -116,10 +115,12 @@ def write_poi_info(poi_index, poi_id, start_page):
             check_in_file.flush()
             check_in_file.close()
             return -1
-  
+        
     except:
         print u"index:"+str(poi_index), u"page:"+str(start_page), u"API调用出错"
         return start_page
+ 
+    """
 
 
 #############################################################
@@ -183,7 +184,7 @@ new_index, new_page = new_start_run()
 def loop_run():
     global new_index, new_page, start_index, start_page, my_client
     if new_index != -1:
-        for i in range(7):
+        for i in range(1):
             acess_token_index = i
             app_info_index = 0
             #开始调用微博
@@ -198,5 +199,5 @@ def loop_run():
 #############################################################
 import libs.timeHandler
 loop_run()
-libs.timeHandler.runTask(loop_run, min=30)
+#libs.timeHandler.runTask(loop_run, min=30)
 
