@@ -7,6 +7,7 @@ import sys
 sys.path.append("..")
 import libs.myWeibo
 import math
+from libs.weibo import APIError 
 
 
 
@@ -26,7 +27,7 @@ def get_list_index_by_id(poiid):
     return -1
 #############################################################
 #微博部分
-#4416
+#5509
 #############################################################
 acess_token_index = 1
 app_info_index = 0
@@ -108,18 +109,39 @@ def write_poi_info(poi_index, poi_id, start_page):
                     #print poi_id, count, i
                     write_check_in_data(r, check_in_file)
                     print u"POI:"+str(poi_index)+u", POIID:"+str(poi_id)+u" 第"+str(i)+u"页完成"
-                except:
-                    print u"index:"+str(poi_index), u"page:"+str(i), u"API调用出错"
-                    return i
+                #处理错误情况
+                except APIError, e:
+                    #'10023'表示User requests out of rate limit!
+                    if '10023' in str(e):
+                        print u"index:"+str(poi_index), u"page:"+str(i), u"API调用出错"
+                        return i
+                    elif '23805' in str(e):
+                        #没有签到数据就返回
+                        print u"POI:"+str(poi_index)+u", POIID:"+str(poi_id)+u"没有签到数据"
+                        return -2
+                    else:
+                        print e
+                        print u"POI:"+str(poi_index)+u", POIID:"+str(poi_id)+u"出错"
+                        sys.exit()
                 
             print u"POI:"+str(poi_index)+u", POIID:"+str(poi_id)+u"完成"
             check_in_file.flush()
             check_in_file.close()
             return -1
   
-    except:
-        print u"index:"+str(poi_index), u"page:"+str(start_page), u"API调用出错"
-        return start_page
+    except APIError, e:
+        #'10023'表示User requests out of rate limit!
+        if '10023' in str(e):
+            print u"index:"+str(poi_index), u"page:"+str(start_page), u"API调用出错"
+            return start_page
+        elif '23805' in str(e):
+            #没有签到数据就返回
+            print u"POI:"+str(poi_index)+u", POIID:"+str(poi_id)+u"没有签到数据"
+            return -2
+        else:
+            print e
+            print u"POI:"+str(poi_index)+u", POIID:"+str(poi_id)+u"出错"
+            sys.exit()
 
 
 #############################################################
@@ -196,7 +218,9 @@ def loop_run():
 #############################################################
 #一切为了循环
 #############################################################
+
 import libs.timeHandler
 loop_run()
 libs.timeHandler.runTask(loop_run, min=30)
+
 
