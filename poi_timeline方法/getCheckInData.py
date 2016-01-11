@@ -27,7 +27,7 @@ def get_list_index_by_id(poiid):
     return -1
 #############################################################
 #微博部分
-#5509
+#index:11646 page:1
 #############################################################
 acess_token_index = 1
 app_info_index = 0
@@ -112,9 +112,10 @@ def write_poi_info(poi_index, poi_id, start_page):
                 #处理错误情况
                 except APIError, e:
                     #'10023'表示User requests out of rate limit!
-                    if '10023' in str(e):
+                    if '10023' or '23201' or '10006' in str(e):
                         print u"index:"+str(poi_index), u"page:"+str(i), u"API调用出错"
                         return i
+                    #'23805'表示不存在这个POI!
                     elif '23805' in str(e):
                         #没有签到数据就返回
                         print u"POI:"+str(poi_index)+u", POIID:"+str(poi_id)+u"没有签到数据"
@@ -131,9 +132,14 @@ def write_poi_info(poi_index, poi_id, start_page):
   
     except APIError, e:
         #'10023'表示User requests out of rate limit!
-        if '10023' in str(e):
+        #'23201'表示Backend Service Connect Timeout!
+        #'10006'表示access token无效
+        if '10023' or '23201' or '10006' in str(e):
+            if '10006' in str(e):
+                print u'Access Token无效'
             print u"index:"+str(poi_index), u"page:"+str(start_page), u"API调用出错"
             return start_page
+        #'23805'表示不存在这个POI!
         elif '23805' in str(e):
             #没有签到数据就返回
             print u"POI:"+str(poi_index)+u", POIID:"+str(poi_id)+u"没有签到数据"
@@ -205,7 +211,7 @@ new_index, new_page = new_start_run()
 def loop_run():
     global new_index, new_page, start_index, start_page, my_client
     if new_index != -1:
-        for i in range(7):
+        for i in range(22):
             acess_token_index = i
             app_info_index = 0
             #开始调用微博
