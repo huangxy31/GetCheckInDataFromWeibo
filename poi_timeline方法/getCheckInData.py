@@ -32,7 +32,7 @@ def get_list_index_by_id(poiid):
 
 #############################################################
 #微博部分
-#index:21378 page:1
+#index:24916 page:425
 #############################################################
 acess_token_index = 1
 app_info_index = 0
@@ -96,7 +96,7 @@ def write_error_log(error):
 def api_error_handle(error, poi_index, poi_id, page):
     if '10023' not in str(error):
     #日志记录
-        write_error_log(error)
+        write_error_log(str(poi_id)+", "+str(error))
         
     #'10023'表示User requests out of rate limit!
     #'23201'表示Backend Service Connect Timeout!
@@ -109,7 +109,7 @@ def api_error_handle(error, poi_index, poi_id, page):
     #'23805'表示不存在这个POI!
     elif '23805' in str(error):
         #没有签到数据就返回
-        print u"POI:"+str(poi_index)+u", POIID:"+str(poi_id)+u"没有签到数据"
+        print u"POI:"+str(poi_index)+u", POIID:"+str(poi_id)+u"不存在"
         return -2
     else:
         print error
@@ -120,7 +120,7 @@ def api_error_handle(error, poi_index, poi_id, page):
 def ssl_error_handle(error, poi_index, poi_id, page):
     #time out处理
     #日志记录
-    write_error_log(error)
+    write_error_log(str(poi_id)+", "+str(error))
     if 'timed out' in str(error):
         print u"index:"+str(poi_index), u"page:"+str(page), u"超时重试！"
         return page
@@ -252,7 +252,7 @@ new_index, new_page = new_start_run()
 def loop_run():
     global new_index, new_page, start_index, start_page, my_client
     #循环完成
-    if new_index == -1 and new_page=-1:
+    if new_index == -1 and new_page == -1:
         sys.exit()
     if new_index != -1:
         for i in range(22):
