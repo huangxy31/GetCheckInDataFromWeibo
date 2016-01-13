@@ -10,6 +10,7 @@ import math
 from libs.weibo import APIError
 import traceback
 from ssl import SSLError
+from urllib2 import URLError
 import time
 
 
@@ -32,9 +33,9 @@ def get_list_index_by_id(poiid):
 
 #############################################################
 #微博部分
-#index:24916 page:425
+#index:27218 page:6
 #############################################################
-acess_token_index = 1
+acess_token_index = 32
 app_info_index = 0
 
 #开始调用微博
@@ -117,7 +118,7 @@ def api_error_handle(error, poi_index, poi_id, page):
         sys.exit()
 
 #处理SSL timed out错误
-def ssl_error_handle(error, poi_index, poi_id, page):
+def timed_out_handle(error, poi_index, poi_id, page):
     #time out处理
     #日志记录
     write_error_log(str(poi_id)+", "+str(error))
@@ -133,6 +134,7 @@ def ssl_error_handle(error, poi_index, poi_id, page):
 #从某页起，获取poi_id的签到信息
 def write_poi_info(poi_index, poi_id, start_page):
     #获取poi信息
+    global my_client
     count = 50
     try:
         r = my_client.place.poi_timeline.get(poiid=poi_id, count=count, page=1)
@@ -173,7 +175,9 @@ def write_poi_info(poi_index, poi_id, start_page):
                     return api_error_handle(e, poi_index, poi_id, i)                        
                 #time out处理
                 except SSLError, e:
-                    return ssl_error_handle(e, poi_index, poi_id, i)
+                    return timed_out_handle(e, poi_index, poi_id, i)
+                except URLError, e:
+                    return timed_out_handle(e, poi_index, poi_id, i)
 
                 
             print u"POI:"+str(poi_index)+u", POIID:"+str(poi_id)+u"完成"
@@ -186,8 +190,9 @@ def write_poi_info(poi_index, poi_id, start_page):
         return api_error_handle(e, poi_index, poi_id, start_page)            
     #time out处理
     except SSLError, e:
-        return ssl_error_handle(e, poi_index, poi_id, start_page)
-            
+        return timed_out_handle(e, poi_index, poi_id, start_page)
+    except URLError, e:
+        return timed_out_handle(e, poi_index, poi_id, start_page)
         
 
 
@@ -255,14 +260,15 @@ def loop_run():
     if new_index == -1 and new_page == -1:
         sys.exit()
     if new_index != -1:
-        for i in range(22):
-            acess_token_index = i
-            app_info_index = 0
-            #开始调用微博
-            my_client = libs.myWeibo.get_client(app_info_index, acess_token_index)
-            start_index = new_index
-            start_page = new_page
-            new_index, new_page = new_start_run()
+        for i in range(37):
+            for j in range(6):
+                acess_token_index = i
+                app_info_index = j
+                #开始调用微博
+                my_client = libs.myWeibo.get_client(app_info_index, acess_token_index)
+                start_index = new_index
+                start_page = new_page
+                new_index, new_page = new_start_run()
 
 
 #############################################################
