@@ -33,7 +33,7 @@ def get_list_index_by_id(poiid):
 
 #############################################################
 #微博部分
-#index:27218 page:6
+#index:38091 page:4
 #############################################################
 acess_token_index = 32
 app_info_index = 0
@@ -86,7 +86,7 @@ def write_check_in_data(r, check_in_file):
 
 #记录错误日志
 def write_error_log(error):
-    f=open("txt/log.txt",'a')
+    f=open("txt/log2.txt",'a')
     f.write(get_current_time() + '\n') #记录时间
     f.write(str(error) + '\n') #记录错误
     f.flush()  
@@ -95,9 +95,9 @@ def write_error_log(error):
     
 #处理API错误
 def api_error_handle(error, poi_index, poi_id, page):
-    if '10023' not in str(error):
+    #if '10023' not in str(error):
     #日志记录
-        write_error_log(str(poi_id)+", "+str(error))
+        #write_error_log(str(poi_id)+", "+str(error))
         
     #'10023'表示User requests out of rate limit!
     #'23201'表示Backend Service Connect Timeout!
@@ -113,6 +113,8 @@ def api_error_handle(error, poi_index, poi_id, page):
         print u"POI:"+str(poi_index)+u", POIID:"+str(poi_id)+u"不存在"
         return -2
     else:
+        #日志记录
+        write_error_log(str(poi_id)+", "+str(error))
         print error
         print u"POI:"+str(poi_index)+u", POIID:"+str(poi_id)+u"出错"
         sys.exit()
@@ -128,7 +130,8 @@ def timed_out_handle(error, poi_index, poi_id, page):
     else:
         print error
         print u"POI:"+str(poi_index)+u", POIID:"+str(poi_id)+u"出错"
-        sys.exit()
+        #sys.exit()
+        return page
 
            
 #从某页起，获取poi_id的签到信息
@@ -193,8 +196,8 @@ def write_poi_info(poi_index, poi_id, start_page):
         return timed_out_handle(e, poi_index, poi_id, start_page)
     except URLError, e:
         return timed_out_handle(e, poi_index, poi_id, start_page)
+    
         
-
 
 #############################################################
 #开始获取

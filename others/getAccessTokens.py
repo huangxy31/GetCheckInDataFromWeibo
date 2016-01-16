@@ -6,6 +6,7 @@ sys.path.append("..")
 from libs.weibo import APIClient
 import webbrowser#python内置的包
 
+access_token_file = open('../libs/accessToken.txt', 'a')
 
 
 '''
@@ -27,6 +28,7 @@ def get_access_token(APP_KEY, APP_SECRET, CALLBACK_URL):
     #client = APIClient(app_key=APP_KEY, app_secret=APP_SECRET, redirect_uri=CALLBACK_URL)
     r = client.request_access_token(code)
     access_token = r.access_token # 新浪返回的token，类似abc123xyz456
+    access_token_file.write(str(access_token)+'\n')
     print access_token
     expires_in = r.expires_in
     print expires_in
@@ -41,3 +43,7 @@ for app_info in app_info_list:
     APP_KEY = app_info[0]
     APP_SECRET = app_info[1]
     get_access_token(APP_KEY, APP_SECRET, CALLBACK_URL)
+
+f.close()
+access_token_file.flush()
+access_token_file.close()
