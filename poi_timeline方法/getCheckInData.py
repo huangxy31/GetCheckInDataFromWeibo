@@ -33,7 +33,7 @@ def get_list_index_by_id(poiid):
 
 #############################################################
 #微博部分
-#index:38091 page:4
+#index:58609 page:1
 #############################################################
 acess_token_index = 32
 app_info_index = 0
@@ -280,6 +280,6 @@ def loop_run():
 
 import libs.timeHandler
 loop_run()
-libs.timeHandler.runTask(loop_run, min=30)
+libs.timeHandler.runTask(loop_run, min=90)
 
 
